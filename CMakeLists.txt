@@ -10,7 +10,7 @@ if (UNIX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -lX11 -Wall" )
 endif (UNIX)
 if (WIN32)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP" )
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP5" )
 endif (WIN32)
 
 set(CMAKE_AUTOMOC ON)
@@ -28,9 +28,8 @@ endif (WIN32)
 find_package(Qt5 COMPONENTS Core REQUIRED)
 find_package(OpenCV REQUIRED)
 
-add_subdirectory(ProcessingModules)
-include_directories( "ProcessingModules/src" )
-include_directories( "ProcessingModules/include" )
+include_directories( "../processing2/src" )
+include_directories( "../processing2/include" )
 
 include_directories( "src" )
 include_directories( "include" )
@@ -71,17 +70,18 @@ copy_json("test_graph_config.json" "gtest/")
 MESSAGE(STATUS "graph2 CMAKE_BINARY_DIR ${CMAKE_BINARY_DIR}")
 MESSAGE(STATUS "graph2 CMAKE_CONFIGURATION_TYPES ${CMAKE_CONFIGURATION_TYPES}")
 
-
-
 add_library(${PROJECT_NAME}_lib STATIC
-    ${SRC} ${HEADERS})
+    ${SRC} ${HEADERS}
+)
 
 target_link_libraries(
     ${PROJECT_NAME}_lib
     Qt::Core
     Threads::Threads
     ${OpenCV_LIBS}
-    utils2_lib)
+    utils2_lib
+    processing2_lib
+)
 
 install(TARGETS ${PROJECT_NAME}_lib
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
