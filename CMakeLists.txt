@@ -28,8 +28,8 @@ endif (WIN32)
 find_package(Qt5 COMPONENTS Core REQUIRED)
 find_package(OpenCV REQUIRED)
 
-include_directories( "../processing2/src" )
-include_directories( "../processing2/include" )
+#include_directories( "../processing2/src" )
+#include_directories( "../processing2/include" )
 
 include_directories( "src" )
 include_directories( "include" )
@@ -58,8 +58,8 @@ set(SRC_HEADERS_TEST
 )
 
 macro(copy_json jsonname jsonpath)
-    configure_file(${jsonpath}${jsonname} ${CMAKE_CONFIGURATION_TYPES}/${jsonname})
-    configure_file(${jsonpath}${jsonname} ${CMAKE_BINARY_DIR}/${CMAKE_CONFIGURATION_TYPES}/${jsonname})
+    configure_file(${jsonpath}${jsonname} ${CMAKE_BUILD_TYPE}/${jsonname})
+    configure_file(${jsonpath}${jsonname} ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${jsonname})
 endmacro()
 
 copy_json("test.json" "gtest/")
@@ -68,26 +68,26 @@ copy_json("test_graph2.json" "gtest/")
 copy_json("test_graph_config.json" "gtest/")
 
 MESSAGE(STATUS "graph2 CMAKE_BINARY_DIR ${CMAKE_BINARY_DIR}")
-MESSAGE(STATUS "graph2 CMAKE_CONFIGURATION_TYPES ${CMAKE_CONFIGURATION_TYPES}")
+MESSAGE(STATUS "graph2 CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE}")
 
-add_library(${PROJECT_NAME}_lib STATIC
+add_library(${PROJECT_NAME} STATIC
     ${SRC} ${HEADERS}
 )
 
 target_link_libraries(
-    ${PROJECT_NAME}_lib
+    ${PROJECT_NAME}
     Qt::Core
     Threads::Threads
     ${OpenCV_LIBS}
-    utils2_lib
-    processing2_lib
+    utils2
+    processing2
 )
 
-install(TARGETS ${PROJECT_NAME}_lib
+install(TARGETS ${PROJECT_NAME}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
     
-install(TARGETS ${PROJECT_NAME}_lib EXPORT ${PROJECT_NAME}Config
+install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}Config
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -98,5 +98,5 @@ MESSAGE(STATUS "CMAKE_INSTALL_LIBDIR: ${CMAKE_INSTALL_LIBDIR}")
 MESSAGE(STATUS "CMAKE_INSTALL_BINDIR: ${CMAKE_INSTALL_BINDIR}")
 
 add_executable(${PROJECT_NAME}_test ${SRC_HEADERS_TEST})
-target_link_libraries(${PROJECT_NAME}_test ${PROJECT_NAME}_lib gtest gmock)
+target_link_libraries(${PROJECT_NAME}_test ${PROJECT_NAME} gtest gmock)
 
