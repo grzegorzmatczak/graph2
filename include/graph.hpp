@@ -2,7 +2,7 @@
 
 #include "processing.h"
 #include "processing_global.h"
-
+#include "graph_global.h"
 #include <QJsonArray>
 
 template<typename T, typename T_data>
